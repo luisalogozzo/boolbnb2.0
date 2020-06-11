@@ -1,14 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Upr;
-use Illuminate\Support\Facades\Auth;
+namespace App\Http\Controllers;
+
 use App\Apartment;
-use App\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
-use App\Http\Controllers\Controller;
-
 
 class ApartmentController extends Controller
 {
@@ -19,9 +14,9 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        $apartments = Apartment::where('user_id', Auth::id())->get();
+        $apartments = Apartment::all();
 
-        return view('upr.your-apartments', compact('apartments'));
+        return view('home', compact('apartments'));
     }
 
     /**
@@ -31,8 +26,7 @@ class ApartmentController extends Controller
      */
     public function create()
     {
-        $services = Service::all();
-        return view('upr.create', compact('services'));
+        //
     }
 
     /**
@@ -43,15 +37,7 @@ class ApartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-
-        $path = 'storage/' . Storage::disk('public')->put('images', $data['cover_img']);
-        $data['cover_img'] = $path;
-        $newApartment = new Apartment;
-        $newApartment->fill($data);
-
-        dd($newApartment);
-
+        //
     }
 
     /**
@@ -62,7 +48,8 @@ class ApartmentController extends Controller
      */
     public function show(Apartment $apartment)
     {
-        //
+      
+        return view('show', compact('apartment'));
     }
 
     /**

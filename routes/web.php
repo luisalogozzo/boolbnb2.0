@@ -18,12 +18,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', 'ApartmentController@index')->name('home');
+Route::get('home', 'ApartmentController@index')->name('home');
+Route::get('apartment/{apartment}', 'ApartmentController@show')->name('apartment.show');
 
 Auth::routes();
 
 
 Route::name('upr.')->prefix('upr')->namespace('Upr')->middleware('auth')->group( function () {
-    Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+    Route::get('dashboard', 'HomeController@index')->name('dashboard');
     Route::resource('apartment', 'ApartmentController');
   });

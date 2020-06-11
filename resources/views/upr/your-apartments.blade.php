@@ -8,7 +8,7 @@
         @foreach ($apartments as $apartment)
           <a href="{{route('apartment.show', $apartment)}}">
             <div class="card mb-5" style="width: 18rem;">
-              <img class="card-img-top" src="{{$apartment->cover_img}}" alt="Card image cap">
+              <img class="card-img-top" src="{{asset($apartment->cover_img)}}" alt="Card image cap">
               <div class="card-body">
                 <h3 class="card-title">{{$apartment->title}}</h3>
                 <p class="card-text">{{$apartment->description}}</p>
