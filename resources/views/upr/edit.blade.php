@@ -4,50 +4,53 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <form class="mt-5 mb-5" action="{{route('upr.apartment.store')}}" method="post" enctype="multipart/form-data">
+        @dd($apartment)
+        <form class="mt-5 mb-5" action="{{route('upr.apartment.update'), $apartment}}" method="post" enctype="multipart/form-data">
           @csrf
-          @method('POST')
+          @method('PATCH')
           <div class="form-group">
             <label for="title">TITOLO</label>
-            <input class="form-control" type="text" name="title" value="">
+            <input class="form-control" type="text" name="title" value="{{$apartment->title}}">
           </div>
           <div class="form-group">
             <label for="description">DESCRIZIONE</label>
-            <textarea class="form-control" name="description" rows="8" cols="80"></textarea>
+            <textarea class="form-control" name="description" rows="8" cols="80">{{$apartment->description}}</textarea>
           </div>
           <div class="form-group">
             <label for="address">INDIRIZZO</label>
-            <input id="address" class="form-control" type="text" name="address" value="">
+            <input id="address" class="form-control" type="text" name="address" value="{{$apartment->address}}">
             <div class="dropdown">
               <ul id="dropdown-address" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
               </ul>
             </div>
           </div>
-          <input id="address-latitude" type="hidden" name="latitude" value="">
-          <input id="address-longitude" type="hidden" name="longitude" value="">
+          <input id="address-latitude" type="hidden" name="latitude" value="{{$apartment->latitude}}">
+          <input id="address-longitude" type="hidden" name="longitude" value="{{$apartment->longitude}}">
           <div class="form-group">
             <label for="n_rooms">NUMERO DI STANZE</label>
-            <input class="form-control" type="number" name="n_rooms" value="">
+            <input class="form-control" type="number" name="n_rooms" value="{{$apartment->n_rooms}}">
           </div>
           <div class="form-group">
             <label for="n_baths">NUMERO DI BAGNI</label>
-            <input class="form-control" type="number" name="n_baths" value="">
+            <input class="form-control" type="number" name="n_baths" value="{{$apartment->n_baths}}">
           </div>
           <div class="form-group">
             <label for="sq_meters">MQ</label>
-            <input class="form-control" type="number" name="sq_meters" value="">
+            <input class="form-control" type="number" name="sq_meters" value="{{$apartment->sq_meters}}">
           </div>
           <div class="form-group">
             <label for="price">PREZZO A NOTTE</label>
-            <input class="form-control" type="number" name="price" value="">
+            <input class="form-control" type="number" name="price" value="{{$apartment->price}}">
           </div>
 
           <div class="form-group">
             @foreach ($services as $service)
               <label for="">{{$service->name}}</label>
-              <input type="checkbox" name="services[]" value="{{$service->id}}">
+              <input type="checkbox" name="services[]" value="{{$service->id}}" {{($apartment->services()->find($service->id)) ? checked : ''}} >
+
             @endforeach
+
           </div>
 
           <div class="form-group">

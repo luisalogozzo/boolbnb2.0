@@ -46,12 +46,14 @@ class ApartmentController extends Controller
         $data = $request->all();
 
         $path = 'storage/' . Storage::disk('public')->put('images', $data['cover_img']);
+
         $data['cover_img'] = $path;
         $newApartment = new Apartment;
         $newApartment->fill($data);
+        $newApartment->user_id = Auth::id();
+        $newApartment->save();
 
-        dd($newApartment);
-
+        $newApartment->services()->attach($data['services']);
     }
 
     /**
@@ -62,7 +64,11 @@ class ApartmentController extends Controller
      */
     public function show(Apartment $apartment)
     {
-        //
+      if ($apartment->user_id != Auth::id()) {
+       return redirect()->route('apartment.show', $apartment);
+      }
+
+      return view('upr.show', compact('apartment'));
     }
 
     /**
@@ -73,7 +79,13 @@ class ApartmentController extends Controller
      */
     public function edit(Apartment $apartment)
     {
-        //
+      $services = Service::all();
+      $data = [
+        'apartment' => $apartment,
+        'services'=> $services
+      ];
+
+      return view('upr.edit', $data);
     }
 
     /**

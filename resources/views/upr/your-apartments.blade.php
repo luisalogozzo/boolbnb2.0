@@ -6,7 +6,7 @@
 
       <div class="col-8  d-flex flex-wrap justify-content-between">
         @foreach ($apartments as $apartment)
-          <a href="{{route('apartment.show', $apartment)}}">
+          <a href="{{route('upr.apartment.show', $apartment)}}">
             <div class="card mb-5" style="width: 18rem;">
               <img class="card-img-top" src="{{asset($apartment->cover_img)}}" alt="Card image cap">
               <div class="card-body">
