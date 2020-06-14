@@ -102,6 +102,97 @@ $(document).ready( function() {
 
  });
 
+  ////////////////////////////////--MAPPA--///////////////////////////////
 
+     // Set product's id and version
+    tt.setProductInfo('boolbnb2.0', '2.0');
+
+    // Initialize the TomTom map in the element with an id set to 'map'
+    var map = tt.map({
+    key: 'hybTDScBzqzH9mWgKjU0mSeOf7eDO4AV',
+    container: 'map',
+    style: 'tomtom://vector/1/basic-main',
+    center: [$('#show-address').attr('data-lon'), $('#show-address').attr('data-lat')],
+    zoom: 10
+    });
+
+    map.addControl(new tt.FullscreenControl());
+    map.addControl(new tt.NavigationControl());
+
+    var SEARCH_QUERY = $('#show-address').text();
+    console.log(SEARCH_QUERY);
+
+    function findGeometry() {
+    tt.services.fuzzySearch({
+    key: 'hybTDScBzqzH9mWgKjU0mSeOf7eDO4AV',
+    query: SEARCH_QUERY
+    })
+    .go()
+    .then(getAdditionalData);
+    }
+
+    findGeometry();
+
+    function getAdditionalData(fuzzySearchResults) {
+    var geometryId = fuzzySearchResults.results[0].dataSources.geometry.id;
+    console.log(geometryId);
+    tt.services.additionalData({
+    key: 'hybTDScBzqzH9mWgKjU0mSeOf7eDO4AV',
+    geometries: [geometryId],
+    geometriesZoom: 12
+    })
+    .go()
+    .then(processAdditionalDataResponse);
+    }
+
+    function buildLayer(id, data) {
+      var centerLat = parseFloat($('#show-address').attr('data-lat'));
+    	var centerLon = parseFloat($('#show-address').attr('data-lon'));
+    	var radius = 20;
+    	//cal per raggio a 128 punti
+    	var rad = 3.14159265359;
+    	var radLat = radius / 111.1896;
+    	var radLon = radius / 82.633;
+    	var coordinates = [];
+    	idCircleTemp = Date.now().toString();
+    	idCircle = idCircleTemp;
+    	for (let index = 0; index < 512; index++) {
+    		coordinates.push([centerLon + radLon * Math.cos(rad * index / 256), centerLat + radLat * Math.sin(rad * index / 256)])
+    	}
+      console.log(data);
+      return {
+        'id': id,
+        'type': 'fill',
+        'source': {
+          'type': 'geojson',
+          'data': {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Polygon',
+              'coordinates': [coordinates]
+            }
+          }
+        },
+        'layout': {},
+        'paint': {
+          'fill-color': '#2FAAFF',
+          'fill-opacity': 0.8,
+          'fill-outline-color': 'black'
+        }
+      }
+    }
+
+    function processAdditionalDataResponse(additionalDataResponse) {
+    if (additionalDataResponse.additionalData && additionalDataResponse.additionalData.length) {
+    var geometryData = displayPolygonOnTheMap(additionalDataResponse.additionalData[0]);
+
+    }
+    }
+
+    function displayPolygonOnTheMap(additionalDataResult) {
+    var geometryData = additionalDataResult.geometryData.features[0].geometry.coordinates[0];
+    map.addLayer(buildLayer('fill_shape_id', geometryData));
+    return geometryData;
+    }
 
 });

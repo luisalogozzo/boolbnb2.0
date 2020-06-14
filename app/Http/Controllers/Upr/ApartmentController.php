@@ -54,6 +54,8 @@ class ApartmentController extends Controller
         $newApartment->save();
 
         $newApartment->services()->attach($data['services']);
+
+        return redirect()->route('upr.apartment.show', $newApartment);
     }
 
     /**
@@ -97,7 +99,19 @@ class ApartmentController extends Controller
      */
     public function update(Request $request, Apartment $apartment)
     {
-        //
+      $data = $request->all();
+
+      if (!empty($data['cover_img'])) {
+        $path = 'storage/' . Storage::disk('public')->put('images', $data['cover_img']);
+        $data['cover_img'] = $path;
+      }
+
+      $apartment->fill($data);
+      $apartment->update();
+
+      $apartment->services()->sync($data['services']);
+      return redirect()->route('upr.apartment.show', $apartment);
+
     }
 
     /**

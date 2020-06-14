@@ -4,8 +4,8 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        @dd($apartment)
-        <form class="mt-5 mb-5" action="{{route('upr.apartment.update'), $apartment}}" method="post" enctype="multipart/form-data">
+
+        <form class="mt-5 mb-5" action="{{route('upr.apartment.update', $apartment)}}" method="post" enctype="multipart/form-data">
           @csrf
           @method('PATCH')
           <div class="form-group">
@@ -47,7 +47,7 @@
           <div class="form-group">
             @foreach ($services as $service)
               <label for="">{{$service->name}}</label>
-              <input type="checkbox" name="services[]" value="{{$service->id}}" {{($apartment->services()->find($service->id)) ? checked : ''}} >
+              <input type="checkbox" name="services[]" value="{{$service->id}}" {{($apartment->services()->find($service->id)) ? 'checked' : ''}} >
 
             @endforeach
 
